@@ -14,7 +14,7 @@ pipeline {
         stage('Check Files') {
             steps {
                 sh 'ls -ltr'
-                sh 'docker ps'
+                sh 'sudo docker ps'
             }
         }
 
@@ -26,7 +26,7 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh '''
-                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    echo "$DOCKER_PASS" | sudo docker login -u "$DOCKER_USER" --password-stdin
                     '''
                 }
             }
@@ -34,7 +34,7 @@ pipeline {
 
         stage('Docker Verify') {
             steps {
-                sh 'docker info'
+                sh 'sudo docker info'
             }
         }
     }
