@@ -19,7 +19,7 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh '''
-                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    echo "$DOCKER_PASS" | sudo docker login -u "$DOCKER_USER" --password-stdin
                     '''
                 }
             }
@@ -27,21 +27,19 @@ pipeline {
 
         stage('Build Image') {
             steps {
-                sh 'docker build -t myapp:latest .'
+                sh 'sudo docker build -t myapp:latest .'
             }
         }
 
         stage('Tag Image') {
             steps {
-                // Update username here
-                sh 'docker tag myapp:latest rituraj4164/myapp:v1'
+                sh 'sudo docker tag myapp:latest rituraj4164/myapp:v1'
             }
         }
 
         stage('Push Image') {
             steps {
-                // Update username here
-                sh 'docker push rituraj4164/myapp:v1'
+                sh 'sudo docker push rituraj4164/myapp:v1'
             }
         }
     }
