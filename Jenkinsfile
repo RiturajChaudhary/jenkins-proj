@@ -11,13 +11,6 @@ pipeline {
             }
         }
 
-        stage('Check Files') {
-            steps {
-                sh 'ls -ltr'
-                sh 'sudo docker ps'
-            }
-        }
-
         stage('Docker Login') {
             steps {
                 withCredentials([usernamePassword(
@@ -26,15 +19,29 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh '''
-                    echo "$DOCKER_PASS" | sudo docker login -u "$DOCKER_USER" --password-stdin
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                     '''
                 }
             }
         }
 
-        stage('Docker Verify') {
+        stage('Build Image') {
             steps {
-                sh 'sudo docker info'
+                sh 'docker build -t myapp:latest .'
+            }
+        }
+
+        stage('Tag Image') {
+            steps {
+                // Update username here
+                sh 'docker tag myapp:latest rituraj4164/myapp:v1'
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                // Update username here
+                sh 'docker push rituraj4164/myapp:v1'
             }
         }
     }
